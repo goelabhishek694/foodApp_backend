@@ -16,25 +16,24 @@
         <input type="password">
         <button>Signup</button>
     </form>
-<script 
-src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.min.js" 
-crossorigin="anonymous">
-    </script>
+    <!-- //axios fetch  -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        let btn = document.querySelector("button");
-        btn.addEventListener("click", async function (e) {
-            // prevent page reload 
+        let btn=document.querySelector('button');
+        btn.addEventListener('click',async function(e){
+
             e.preventDefault();
-            // email
-    let email = document.querySelector("input[type='email']").value;
-            // password
-    let password = document.querySelector("input[type='password']").value;
-            //name
-    let name = document.querySelector("input[type='text']").value;
-    let resp = await axios.post("/auth/signup", {email, password, name})
-            console.log('resp',resp.data);
+
+            let email=document.querySelector("input[type='email']").value;
+            let name=document.querySelector("input[type='text']").value;
+            let password=document.querySelector("input[type='password']").value;
+
+            let resp=await axios.post('/auth/signup',{email,name,password});
+            console.log('resp',resp);
         })
     </script>
-</body>
 
+
+
+</body>
 </html>
