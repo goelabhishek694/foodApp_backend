@@ -41,6 +41,7 @@ authRouter
 .post(postSignUp);
 
 function getUser(req, res) {
+  console.log(req.query);
   res.send(users);
 }
 
@@ -73,18 +74,9 @@ function deleteUser(req, res) {
 }
 
 function getUserById(req, res) {
-  console.log(req.params.id);
-  let paramId = req.params.id;
-  let obj = {};
-  for (let i = 0; i < users.length; i++) {
-    if (users[i]["id"] == paramId) {
-      obj = users[i];
-    }
-  }
-  res.json({
-    message: "req received",
-    data: obj,
-  });
+  console.log(req.params.username);
+    console.log(req.params);
+    res.send("user id received");
 }
 
 function middleware1(req,res,next){
