@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose=require('mongoose');
+const emailValidator=require('email-validator');
 //middleware func-> post, front-> json
 app.use(express.json()); //global middleware 
 app.listen(3000);
@@ -43,7 +44,7 @@ authRouter
 async function getUsers(req, res) {
   // console.log(req.query);
   // let allUsers=await userModel.find();
-  let user=await userModel.findOne({name:'Abhishek'});
+  let allUsers=await userModel.findOne({name:'Abhishek Goel'});
   res.json({message:'list of all users',
   data:allUsers});
 }
@@ -108,7 +109,7 @@ function getSignUp(req,res,next){
 async function postSignUp(req,res){
   let dataObj=req.body;
   let user=await userModel.create(dataObj);
-  console.log('backend',user);
+  // console.log('backend',user);
   res.json({
     message:"user signed up",
     data:user
@@ -136,7 +137,10 @@ const userSchema=mongoose.Schema({
   email:{
     type:String,
     required:true,
-    unique:true
+    unique:true,
+    validate:function(){
+      return emailValidator.validate(this.email);
+    }
   },
   password:{
     type:String,
@@ -146,9 +150,33 @@ const userSchema=mongoose.Schema({
   confirmPassword:{
     type:String,
     required:true,
-    minLength:8
+    minLength:8,
+    validate:function(){
+      return this.confirmPassword==this.password
+    }
   }
 });
+//pre post hooks 
+//after save event occurs in db
+// userSchema.post('save',function(doc){
+//   console.log('after saving in db',doc);
+// });
+
+// //beofre save event occurs in db
+// userSchema.pre('save',function(){
+//   console.log('before saving in db',this);
+// });
+
+//remove - explore on own
+
+
+userSchema.pre('save',function(){
+  this.confirmPassword=undefined;
+});
+
+
+
+
 
 // model
 const userModel=mongoose.model('userModel',userSchema);
