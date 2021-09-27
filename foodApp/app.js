@@ -1,11 +1,11 @@
 const express = require("express");
 const app = express();
-const mongoose=require('mongoose');
-const emailValidator=require('email-validator');
+const userModel=require('./models/userModel');
+const cookieParser=require('cookie-parser');
 //middleware func-> post, front-> json
 app.use(express.json()); //global middleware 
 app.listen(3000);
-
+app.use(cookieParser());
 // let users = [
 //   {
 //     id: 1,
@@ -33,6 +33,14 @@ userRouter
   .post(postUser)
   .patch(updateUser)
   .delete(deleteUser);
+
+  userRouter
+  .route("/getCookies")
+  .get(getCookies);
+
+  userRouter
+  .route("/setCookies")
+  .get(setCookies);
 
 userRouter.route("/:id").get(getUserById);
 
@@ -116,72 +124,21 @@ async function postSignUp(req,res){
   });
 }
 
+function setCookies(req,res){
+  // res.setHeader('Set-Cookie','isLoggedIn=true');
+  res.cookie('isLoggedIn',true,{maxAge:1000*60*60*24, secure:true, httpOnly:true});
+  res.cookie('isPrimeMember',true);
+  res.send('cookies has been set ');
+}
 
-//mongoDB
-
-const db_link='mongodb+srv://admin:xnDx4jlj5mmzjiVE@cluster0.3irmz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-mongoose.connect(db_link)
-.then(function(db){
-  // console.log(db);
-  console.log('db connected');
-})
-.catch(function(err){
-  console.log(err);
-});
-
-const userSchema=mongoose.Schema({
-  name:{
-    type:String,
-    required:true
-  },
-  email:{
-    type:String,
-    required:true,
-    unique:true,
-    validate:function(){
-      return emailValidator.validate(this.email);
-    }
-  },
-  password:{
-    type:String,
-    required:true,
-    minLength:8
-  },
-  confirmPassword:{
-    type:String,
-    required:true,
-    minLength:8,
-    validate:function(){
-      return this.confirmPassword==this.password
-    }
-  }
-});
-//pre post hooks 
-//after save event occurs in db
-// userSchema.post('save',function(doc){
-//   console.log('after saving in db',doc);
-// });
-
-// //beofre save event occurs in db
-// userSchema.pre('save',function(){
-//   console.log('before saving in db',this);
-// });
-
-//remove - explore on own
-
-
-userSchema.pre('save',function(){
-  this.confirmPassword=undefined;
-});
+function getCookies(req,res){
+  let cookies=req.cookies.isLoggedIn;
+  console.log(cookies);
+  res.send('cookies received');
+}
 
 
 
-
-
-// model
-const userModel=mongoose.model('userModel',userSchema);
-
-// (async function createUser(){
 //   let user={
 //     name:'Jasbir',
 //     email:'abcd@gmail.com',
