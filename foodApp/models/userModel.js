@@ -37,7 +37,17 @@ const userSchema=mongoose.Schema({
     validate:function(){
       return this.confirmPassword==this.password
     }
-  }
+  },
+  role:{
+    type:String,
+    enum:['admin','user','restaurantowner','deliveryboy'],
+    default:'user'
+  },
+  profileImage:{
+    type:String,
+    default:'img/users/default.jpeg'
+  },
+  resetToken:String
 });
 //pre post hooks 
 //after save event occurs in db
@@ -56,6 +66,25 @@ const userSchema=mongoose.Schema({
 userSchema.pre('save',function(){
   this.confirmPassword=undefined;
 });
+
+userSchema.methods.createResetToken=function(){
+  const resetToken=crypto.randomBytes(32).toString('hex');
+  this.resetToken=resetToken;
+  return resetToken;
+}
+
+userSchema.methods.resetPasswordHandler=function(password,confirmPassword){
+  this.password=password;
+  this.confirmPassword=confirmPassword;
+  this.resetToken=undefined;
+}
+
+
+
+
+
+
+
 
 // userSchema.pre('save',async function(){
 //     let salt=await bcrypt.genSalt();
