@@ -1,6 +1,7 @@
 const express = require("express");
 const planRouter = express.Router();
 const{protectRoute, isAuthorised}=require('../controller/authController');
+const{getPlan,getAllPlans,createPlan,updatePlan,deletePlan}=require('../controller/planController');
 
 //all plans leke aayega 
 planRouter.route('/allPlans')
@@ -15,7 +16,10 @@ planRouter.route('/plan/:id')
 planRouter.use(isAuthorised['admin','restaurantowner']);
 planRouter
 .route('/crudPlan')
-.post(createPlan)
+.post(createPlan);
+
+planRouter
+.route('/crudPlan/:id')
 .patch(updatePlan)
 .delete(deletePlan)
 
