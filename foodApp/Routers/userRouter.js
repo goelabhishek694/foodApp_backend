@@ -2,7 +2,7 @@ const express = require("express");
 const userRouter = express.Router();
 // const protectRoute=require('./authHelper');
 const {getUser,getAllUser,updateUser,deleteUser}=require('../controller/userController');
-const{signup,login,isAuthorised,protectRoute}=require('../controller/authController');
+const{signup,login,isAuthorised,protectRoute,forgetpassword,resetpassword}=require('../controller/authController');
 
 // user ke options 
 userRouter.route('/:id')
@@ -16,6 +16,14 @@ userRouter
 userRouter
 .route('/login')
 .post(login)
+
+userRouter
+.route('/forgetpassword')
+.post(forgetpassword)
+
+userRouter
+.route('/resetpassword/:token')
+.post(resetpassword)
 
 //profile page 
 userRouter.use(protectRoute);

@@ -102,6 +102,13 @@ module.exports.protectRoute=async function protectRoute(req, res, next) {
       }
     }
     else{
+      //browser
+        const client =req.get('User-Agent');
+        if(client.includes('Mozilla')==true){
+          //redirect to login page 
+          return res.redirect('/login');
+        }
+      // postman
         res.json({
             message:"please login"
         })
@@ -112,3 +119,66 @@ module.exports.protectRoute=async function protectRoute(req, res, next) {
     });
   }
 }
+
+//forgetPassword
+module.exports.forgetpassword=async function forgetpassword(req,res){
+  let{email}=req.body;
+  try{
+    const user=await userModel.findOne({email:email});
+    if(user){
+      //createResetToken is used to create a new token
+      const resetToken=user.createResetToken();
+      // http://abc.com/resetpassword/resetToken
+      let resetPasswordLink=`${req.protocol}://${req.get('host')}/resetpassword/${resetToken}`;
+      //send email to the user 
+      //nodemailer
+    }
+    else{
+      return res.json({
+        mesage:"please signup"
+      });
+    }
+  }
+  catch(err){
+    res.status(500).json({
+      mesage:err.message
+    });
+  }
+}
+
+//resetPassword
+module.exports.resetpassword=async function resetpassword(req,res){
+  try{
+  const token=req.parmas.token;
+  let {password,confirmPassword}=req.body;
+  const user=await userModel.findOne({resetToken:token});
+  if(user){
+//resetPasswordHandler will update user's password in db 
+user.resetPasswordHandler(password,confirmPassword);
+await user.save();
+res.json({
+  message:"password changed succesfully, please login again"
+})
+  }
+  else{
+    res.json({
+      message:"user not found"
+    });
+  }
+  
+}
+catch(err){
+  res.json({
+    message:err.message
+  });
+}
+}
+
+function logout(req,res){
+  res.cookie('login','',{maxAge:1});
+  res.json({
+    message:"user logged out succesfully"
+  });
+  // res.redirect('/login');
+};
+
