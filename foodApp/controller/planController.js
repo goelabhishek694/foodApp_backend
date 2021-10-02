@@ -75,6 +75,8 @@ module.exports.updatePlan = async function (req, res) {
   try {
     let id = req.params.id;
     let dataToBeUpdated = req.body;
+    console.log(id);
+    console.log(dataToBeUpdated);
     let keys = [];
     for (let key in dataToBeUpdated) {
       keys.push(key);
@@ -83,8 +85,13 @@ module.exports.updatePlan = async function (req, res) {
     for (let i = 0; i < keys.length; i++) {
       plan[keys[i]] = dataToBeUpdated[keys[i]];
     }
+    console.log(plan);
     //doc
     await plan.save();
+    return res.json({
+        message:'plan updated succesfully',
+        data:plan
+    });
   } catch (err) {
     res.status(500).json({
       message: err.message,

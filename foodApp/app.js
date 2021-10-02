@@ -21,12 +21,11 @@ app.use(cookieParser());
 // ];
 //mini app
 const userRouter = require('./Routers/userRouter');
-// const authRouter=require('./Routers/authRouter');
+const planRouter = require('./Routers/planRouter');
 //base route , router to use
 app.use("/user", userRouter);
+app.use("/plans", planRouter);
 // app.use("/auth", authRouter);
-
-const planModel=require('./models/planModel');
 
 
 
