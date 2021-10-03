@@ -3,7 +3,7 @@ const db_link='mongodb+srv://admin:xnDx4jlj5mmzjiVE@cluster0.3irmz.mongodb.net/m
 mongoose.connect(db_link)
 .then(function(db){
   // console.log(db);
-  console.log('user db connected');
+  console.log('review db connected');
 })
 .catch(function(err){
   console.log(err);

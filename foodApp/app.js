@@ -22,9 +22,11 @@ app.use(cookieParser());
 //mini app
 const userRouter = require('./Routers/userRouter');
 const planRouter = require('./Routers/planRouter');
+const reviewRouter = require('./Routers/reviewRouter');
 //base route , router to use
 app.use("/user", userRouter);
 app.use("/plans", planRouter);
+app.use("/review", reviewRouter);
 // app.use("/auth", authRouter);
 
 
