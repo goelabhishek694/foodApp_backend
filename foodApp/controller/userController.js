@@ -94,6 +94,11 @@ catch(err){
 };
 
 
+module.exports.updateProfileImage=function updateProfileImage(req,res){
+  res.json({
+    message:'file uploaded succesfully'
+  });
+}
 
 //   function setCookies(req,res){
 //     // res.setHeader('Set-Cookie','isLoggedIn=true');
