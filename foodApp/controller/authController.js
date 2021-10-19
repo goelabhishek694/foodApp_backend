@@ -1,6 +1,7 @@
 const express = require("express");
 const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const { sendMail } = require("../utility/nodemailer");
 const { JWT_KEY } = require("../secrets");
 
 //sign up user
@@ -8,6 +9,7 @@ module.exports.signup = async function signup(req, res) {
   try {
     let dataObj = req.body;
     let user = await userModel.create(dataObj);
+    sendMail(user);
     if (user) {
       return res.json({
         message: "user signed up",
@@ -81,7 +83,7 @@ module.exports.isAuthorised = function isAuthorised(roles) {
 };
 
 //protectRoute
-module.exports.protectRoute=async function protectRoute(req, res, next) {
+module.exports.protectRoute = async function protectRoute(req, res, next) {
   try {
     let token;
     if (req.cookies.login) {
@@ -89,7 +91,7 @@ module.exports.protectRoute=async function protectRoute(req, res, next) {
       token = req.cookies.login;
       let payload = jwt.verify(token, JWT_KEY);
       if (payload) {
-          console.log('payload token',payload);
+        console.log("payload token", payload);
         const user = await userModel.findById(payload.payload);
         req.role = user.role;
         req.id = user.id;
@@ -100,85 +102,78 @@ module.exports.protectRoute=async function protectRoute(req, res, next) {
           message: "please login again",
         });
       }
-    }
-    else{
+    } else {
       //browser
-        const client =req.get('User-Agent');
-        if(client.includes('Mozilla')==true){
-          //redirect to login page 
-          return res.redirect('/login');
-        }
-      // postman
-        res.json({
-            message:"please login"
-        })
+      const client=req.get('User-Agent');
+      if(client.includes("Mozilla")==true){
+        return res.redirect('/login');
+      }
+      //postman
+      res.json({
+        message: "please login",
+      });
     }
   } catch (err) {
     return res.json({
       message: err.message,
     });
   }
-}
+};
 
 //forgetPassword
-module.exports.forgetpassword=async function forgetpassword(req,res){
-  let{email}=req.body;
-  try{
-    const user=await userModel.findOne({email:email});
-    if(user){
+module.exports.forgetpassword = async function forgetpassword(req, res) {
+  let { email } = req.body;
+  try {
+    const user = await userModel.findOne({ email: email });
+    if (user) {
       //createResetToken is used to create a new token
-      const resetToken=user.createResetToken();
+      const resetToken = user.createResetToken();
       // http://abc.com/resetpassword/resetToken
-      let resetPasswordLink=`${req.protocol}://${req.get('host')}/resetpassword/${resetToken}`;
-      //send email to the user 
+      let resetPasswordLink = `${req.protocol}://${req.get(
+        "host"
+      )}/resetpassword/${resetToken}`;
+      //send email to the user
       //nodemailer
-    }
-    else{
+    } else {
       return res.json({
-        mesage:"please signup"
+        mesage: "please signup",
       });
     }
-  }
-  catch(err){
+  } catch (err) {
     res.status(500).json({
-      mesage:err.message
+      mesage: err.message,
     });
   }
-}
+};
 
 //resetPassword
-module.exports.resetpassword=async function resetpassword(req,res){
-  try{
-  const token=req.parmas.token;
-  let {password,confirmPassword}=req.body;
-  const user=await userModel.findOne({resetToken:token});
-  if(user){
-//resetPasswordHandler will update user's password in db 
-user.resetPasswordHandler(password,confirmPassword);
-await user.save();
-res.json({
-  message:"password changed succesfully, please login again"
-})
-  }
-  else{
+module.exports.resetpassword = async function resetpassword(req, res) {
+  try {
+    const token = req.parmas.token;
+    let { password, confirmPassword } = req.body;
+    const user = await userModel.findOne({ resetToken: token });
+    if (user) {
+      //resetPasswordHandler will update user's password in db
+      user.resetPasswordHandler(password, confirmPassword);
+      await user.save();
+      res.json({
+        message: "password changed succesfully, please login again",
+      });
+    } else {
+      res.json({
+        message: "user not found",
+      });
+    }
+  } catch (err) {
     res.json({
-      message:"user not found"
+      message: err.message,
     });
   }
-  
-}
-catch(err){
-  res.json({
-    message:err.message
-  });
-}
-}
+};
 
-function logout(req,res){
-  res.cookie('login','',{maxAge:1});
+module.exports.logout=function logout(req,res){
+  res.cookie('login',' ',{maxAge:1});
   res.json({
     message:"user logged out succesfully"
   });
-  // res.redirect('/login');
-};
-
+}

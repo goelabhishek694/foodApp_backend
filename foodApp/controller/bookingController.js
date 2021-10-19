@@ -35,7 +35,7 @@ module.exports.createSession=async function createSession(req,res){
         session
       })
     } catch (err) {
-      res.status(200).json({
+      res.status(500).json({
         err: err.message
       })
     }
