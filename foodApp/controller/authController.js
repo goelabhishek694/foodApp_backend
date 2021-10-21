@@ -9,7 +9,7 @@ module.exports.signup = async function signup(req, res) {
   try {
     let dataObj = req.body;
     let user = await userModel.create(dataObj);
-    sendMail(user);
+    sendMail("signup",user);
     if (user) {
       return res.json({
         message: "user signed up",
@@ -44,7 +44,7 @@ module.exports.login = async function login(req, res) {
           // res.cookie('isLoggedIn',true);
           return res.json({
             message: "User has logged in",
-            userDetails: data,
+            data: user, // userDetails:data,
           });
         } else {
           return res.json({
@@ -134,6 +134,11 @@ module.exports.forgetpassword = async function forgetpassword(req, res) {
       )}/resetpassword/${resetToken}`;
       //send email to the user
       //nodemailer
+      sendMail("resetpassword",resetPasswordLink);
+      return res.json({
+        mesage: "reset password link sent",
+        data:resetPasswordLink
+      });
     } else {
       return res.json({
         mesage: "please signup",

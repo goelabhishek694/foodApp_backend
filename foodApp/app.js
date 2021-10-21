@@ -3,7 +3,9 @@ const app = express();
 const cookieParser=require('cookie-parser');
 //middleware func-> post, front-> json
 app.use(express.json()); //global middleware 
-app.listen(3000);
+app.listen(5000,function(){
+    console.log("server listening on port 5000"); 
+});
 app.use(cookieParser());
 // let users = [
 //   {
