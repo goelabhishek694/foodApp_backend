@@ -10,7 +10,7 @@ planRouter.route('/allPlans')
 //own plan -> logged in necessary 
 planRouter.use(protectRoute);
 planRouter.route('/plan/:id')
-.get(getPlan)
+.get(getPlan);
 
 // admin nd restaurant owner can only create,update or delte plans 
 planRouter.use(isAuthorised(['admin','restaurantowner']));

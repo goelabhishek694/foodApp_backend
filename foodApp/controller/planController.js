@@ -23,8 +23,10 @@ module.exports.getAllPlans = async function getAllPlans(req, res) {
 module.exports.getPlan = async function getPlan(req, res) {
   try {
     let id = req.params.id;
+    console.log(id);
     let plan = await planModel.findById(id);
     if (plan) {
+      console.log(plan);
       return res.json({
         message: "plan retrieved",
         data: plan,

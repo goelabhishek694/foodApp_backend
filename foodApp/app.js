@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+var cors = require('cors');
+app.use(cors()) ;
 const cookieParser=require('cookie-parser');
 //middleware func-> post, front-> json
 app.use(express.json()); //global middleware 

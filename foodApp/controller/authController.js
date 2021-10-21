@@ -134,7 +134,11 @@ module.exports.forgetpassword = async function forgetpassword(req, res) {
       )}/resetpassword/${resetToken}`;
       //send email to the user
       //nodemailer
-      sendMail("resetpassword",resetPasswordLink);
+      let obj={
+        resetPasswordLink:resetPasswordLink,
+        email:email
+      }
+      sendMail("resetpassword",obj);
       return res.json({
         mesage: "reset password link sent",
         data:resetPasswordLink

@@ -49,9 +49,11 @@ module.exports.top3reviews=async function top3reviews(req,res){
 
 module.exports.getPlanReviews=async function getPlanReviews(req,res){
   try{
-    const planid=req.params.plan;
-    const reviews=await reviewModel.find();
-    reviews=reviews.filter(review=>review.plan_id==planid);
+    const planid=req.params.id;
+    console.log("plan id",planid);
+    let reviews=await reviewModel.find();
+
+    reviews=reviews.filter(review=>review.plan["_id"]==planid);
     return res.json({
       message:'reviews retrieved for a particular plan successful',
       data:reviews
@@ -72,7 +74,7 @@ module.exports.createReview=async function createReview(req,res){
   //replace with orig formula
   plan.ratingsAverage=(plan.ratingsAverage+req.body.rating)/2;
 
-  await plan.save();
+  await review.save();
   res.json({
     message: "review created",
     data: review,

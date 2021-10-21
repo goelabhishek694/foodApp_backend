@@ -30,7 +30,7 @@ let transporter = nodemailer.createTransport({
     Ohtml=`
     <h1>foodAp.com</h1>
     Here is your link to reset your password !
-    ${data}
+    ${data.resetPasswordLink}
     `
   }
 
