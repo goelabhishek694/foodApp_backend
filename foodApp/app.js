@@ -9,20 +9,7 @@ app.listen(5000,function(){
     console.log("server listening on port 5000"); 
 });
 app.use(cookieParser());
-// let users = [
-//   {
-//     id: 1,
-//     name: "Abhishek",
-//   },
-//   {
-//     id: 2,
-//     name: "Jasbir",
-//   },
-//   {
-//     id: 3,
-//     name: "Kartik",
-//   },
-// ];
+
 //mini app
 const userRouter = require('./Routers/userRouter');
 const planRouter = require('./Routers/planRouter');

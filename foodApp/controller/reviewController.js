@@ -54,9 +54,10 @@ module.exports.getPlanReviews=async function getPlanReviews(req,res){
     let reviews=await reviewModel.find();
 
     reviews=reviews.filter(review=>review.plan["_id"]==planid);
+    // console.log(reviews);
     return res.json({
-      message:'reviews retrieved for a particular plan successful',
-      data:reviews
+      data:reviews,
+      message:'reviews retrieved for a particular plan successful'
     });
   }
   catch(err){
@@ -118,6 +119,7 @@ module.exports.deleteReview=async function deleteReview(req,res){
   try{
   let id=req.body.id;
   //update average ratings 
+  console.log("reviewId",id);
   let review=await reviewModel.findByIdAndDelete(id);
   res.json({
     message: "review deleted",

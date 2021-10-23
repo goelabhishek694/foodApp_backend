@@ -7,10 +7,13 @@ const{getPlan,getAllPlans,createPlan,updatePlan,deletePlan,top3Plans}=require('.
 planRouter.route('/allPlans')
 .get(getAllPlans)
 
+planRouter.route('/top3').get(top3Plans)
+
 //own plan -> logged in necessary 
 planRouter.use(protectRoute);
 planRouter.route('/plan/:id')
 .get(getPlan);
+
 
 // admin nd restaurant owner can only create,update or delte plans 
 planRouter.use(isAuthorised(['admin','restaurantowner']));
@@ -23,5 +26,4 @@ planRouter
 .patch(updatePlan)
 .delete(deletePlan)
 
-planRouter.route('/top3').get(top3Plans)
 module.exports=planRouter;

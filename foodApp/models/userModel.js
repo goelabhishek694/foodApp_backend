@@ -46,7 +46,7 @@ const userSchema=mongoose.Schema({
   },
   profileImage:{
     type:String,
-    default:'img/users/default.jpeg'
+    default:'../Images/UserIcon.png'
   },
   resetToken:String
 });
